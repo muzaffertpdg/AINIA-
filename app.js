@@ -1,9 +1,12 @@
 // ---- Shared scene 1 card ----
+const sharedHasExcerpt = SHARED_SCENE.excerpt && SHARED_SCENE.excerpt.trim().length > 0;
 const sharedCard = document.getElementById('sharedSceneCard');
+sharedCard.className = 'shared-scene-card' + (sharedHasExcerpt ? ' has-excerpt' : '');
 sharedCard.innerHTML = `
   <a href="${SHARED_SCENE.url}" target="_blank" rel="noopener">
     <span class="ssc-label">Scene ${SHARED_SCENE.scene} &middot; Shared opening</span>
     <span class="ssc-title">${SHARED_SCENE.title}</span>
+    ${sharedHasExcerpt ? `<span class="sc-tooltip">${SHARED_SCENE.excerpt}</span>` : ''}
   </a>
   <svg class="ssc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
 `;
@@ -13,10 +16,12 @@ function cellHTML(entry, kind) {
   if (!entry) {
     return `<div class="scene-cell empty"><span>not yet published</span></div>`;
   }
+  const hasExcerpt = entry.excerpt && entry.excerpt.trim().length > 0;
   return `
-    <div class="scene-cell ${kind}-cell">
+    <div class="scene-cell ${kind}-cell${hasExcerpt ? ' has-excerpt' : ''}">
       <a href="${entry.url}" target="_blank" rel="noopener">
         <span class="sc-title">${entry.title}</span>
+        ${hasExcerpt ? `<span class="sc-tooltip">${entry.excerpt}</span>` : ''}
       </a>
     </div>
   `;
@@ -33,3 +38,24 @@ SCENES.forEach(row => {
   `;
   rowsEl.appendChild(div);
 });
+
+// ---- Tooltip behavior ----
+// Desktop/hover-capable devices: pure CSS :hover reveals the tooltip (see si-styles.css),
+// and a normal click navigates immediately — no JS needed for that path.
+// Touch-primary devices: first tap reveals the tooltip and does NOT navigate; a second
+// tap (on the title or the now-visible tooltip text, both inside the same <a>) navigates
+// normally. Cells with no excerpt never get this treatment — a single tap just navigates.
+const isTouchPrimary = window.matchMedia('(hover: none)').matches;
+if (isTouchPrimary) {
+  document.querySelectorAll('.has-excerpt > a').forEach(link => {
+    let revealed = false;
+    link.addEventListener('click', function (e) {
+      if (!revealed) {
+        e.preventDefault();
+        this.closest('.has-excerpt').classList.add('revealed');
+        revealed = true;
+      }
+      // second tap: revealed is already true, default navigation proceeds
+    });
+  });
+}
