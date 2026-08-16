@@ -76,7 +76,7 @@ const SCENES = [
   },
   {
     scene: 15,
-    ui: { title: '', url: '' },
-    rh: { title: '', url: '' },
+    ui: null,
+    rh: null,
   },
 ];

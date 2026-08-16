@@ -43,19 +43,24 @@ SCENES.forEach(row => {
 // Desktop/hover-capable devices: pure CSS :hover reveals the tooltip (see si-styles.css),
 // and a normal click navigates immediately — no JS needed for that path.
 // Touch-primary devices: first tap reveals the tooltip and does NOT navigate; a second
-// tap (on the title or the now-visible tooltip text, both inside the same <a>) navigates
-// normally. Cells with no excerpt never get this treatment — a single tap just navigates.
+// tap on that same box navigates normally. Tapping a DIFFERENT scene's tooltip closes
+// whichever one was previously open. Cells with no excerpt never get this treatment —
+// a single tap just navigates.
 const isTouchPrimary = window.matchMedia('(hover: none)').matches;
 if (isTouchPrimary) {
+  let currentlyRevealed = null;
   document.querySelectorAll('.has-excerpt > a').forEach(link => {
-    let revealed = false;
     link.addEventListener('click', function (e) {
-      if (!revealed) {
+      const cell = this.closest('.has-excerpt');
+      if (!cell.classList.contains('revealed')) {
         e.preventDefault();
-        this.closest('.has-excerpt').classList.add('revealed');
-        revealed = true;
+        if (currentlyRevealed && currentlyRevealed !== cell) {
+          currentlyRevealed.classList.remove('revealed');
+        }
+        cell.classList.add('revealed');
+        currentlyRevealed = cell;
       }
-      // second tap: revealed is already true, default navigation proceeds
+      // already revealed: default navigation proceeds
     });
   });
 }
