@@ -20,7 +20,7 @@ function cellHTML(entry, kind) {
   return `
     <div class="scene-cell ${kind}-cell${hasExcerpt ? ' has-excerpt' : ''}">
       <a href="${entry.url}" target="_blank" rel="noopener">
-        <span class="sc-title">${entry.title}</span>
+        <span class="sc-title"><span class="cell-dot dot-${kind}"></span>${entry.title}</span>
         ${hasExcerpt ? `<span class="sc-tooltip">${entry.excerpt}</span>` : ''}
       </a>
     </div>
@@ -61,6 +61,15 @@ if (isTouchPrimary) {
         currentlyRevealed = cell;
       }
       // already revealed: default navigation proceeds
+    });
+  });
+}
+
+// ---- PWA: register service worker ----
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => {
+      console.warn('Service worker registration failed:', err);
     });
   });
 }
