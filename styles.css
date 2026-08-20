@@ -172,9 +172,10 @@ button { cursor: pointer; background: none; border: none; }
 .header-meta { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-faint); }
 @media (max-width: 640px) { .header-nav { display: none; } }
 
-/* ===== Hero ===== */
+```css
+/* ===== Hero (tight) ===== */
 .hero {
-  padding: 80px 24px 64px;
+  padding: 8px 24px 12px;
   background: linear-gradient(in srgb,
     color-mix(in srgb, var(--color-algae-deep) 12%, var(--color-bg)),
     var(--color-bg)
@@ -188,22 +189,22 @@ button { cursor: pointer; background: none; border: none; }
 }
 .hero-inner { max-width: var(--content-wide); margin: 0 auto; position: relative; }
 .hero-badge {
-  display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px;
+  display: inline-flex; align-items: center; gap: 8px; padding: 3px 7px;
   font-size: 13px; font-weight: 500; font-family: var(--font-mono);
   color: var(--color-primary);
   background: color-mix(in srgb, var(--color-primary) 8%, transparent);
   border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
-  border-radius: var(--radius-full); margin-bottom: 24px;
+  border-radius: var(--radius-full); margin-bottom: 8px;
 }
 .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-algae); animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
 .hero-title {
   font-size: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
-  font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 20px; max-width: 16ch;
+  font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 2px; max-width: 16ch;
   background: linear-gradient(135deg, var(--color-text) 0%, var(--color-algae) 100%);
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
-.hero-subtitle { font-size: clamp(16px, 0.9rem + 0.5vw, 19px); line-height: 1.7; color: var(--color-text-muted); max-width: 760px; margin-bottom: 48px; }
+.hero-subtitle { font-size: clamp(16px, 0.9rem + 0.5vw, 19px); line-height: 1.6; color: var(--color-text-muted); max-width: 760px; margin-bottom: 2px; }
 .hero-subtitle strong { color: var(--color-text); }
 .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 @media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
@@ -213,7 +214,7 @@ button { cursor: pointer; background: none; border: none; }
 .stat-label { font-size: 12px; color: var(--color-text-muted); line-height: 1.4; margin-top: 4px; }
 
 /* ===== Section Headers ===== */
-section { padding: 64px 0; border-bottom: 1px solid var(--color-border); }
+section { padding: 32px 0; border-bottom: 1px solid var(--color-border); }
 .section-inner { max-width: var(--content-wide); margin: 0 auto; padding: 0 24px; }
 .section-header { max-width: var(--content-wide); margin: 0 auto 32px; padding: 0 24px; }
 .section-header .eyebrow { font-family: var(--font-mono); font-size: 12px; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
