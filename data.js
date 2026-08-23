@@ -3,9 +3,19 @@
 
 const SHARED_SCENE = {
   scene: 1,
+  label: 'chapter 1 · opening scene · ainia',
   title: 'the etiäinen',
   url: 'https://unibodyinfinity.substack.com/p/the-etiainen',
   excerpt: 'When I get to the top I will open the door, look towards our car just passing by, see myself in it, looking at me. I will wave at myself, someone else’s smile on my face, knowing.',
+};
+
+// ---- Closing scene (renders as a second full-width card, below the last row) ----
+const CLOSING_SCENE = {
+  scene: 16,
+  label: 'chapter 1 · closing scene · ainia',
+  title: 'the wall',
+  url: 'https://unibodyinfinity.substack.com/p/the-wall?r=2ofjql&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true',
+  excerpt: 'I’ll come find you.',
 };
 
 const SCENES = [
