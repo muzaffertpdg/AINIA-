@@ -133,6 +133,8 @@ html {
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+  overflow-x: hidden;
+  width: 100%;
 }
 body {
   min-height: 100dvh;
@@ -172,7 +174,6 @@ button { cursor: pointer; background: none; border: none; }
 .header-meta { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-faint); }
 @media (max-width: 640px) { .header-nav { display: none; } }
 
-```css
 /* ===== Hero (tight) ===== */
 .hero {
   padding: 8px 24px 12px;
@@ -366,6 +367,11 @@ section { padding: 32px 0; border-bottom: 1px solid var(--color-border); }
 .footer-brand span { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--color-text); }
 .footer-text { font-size: 13px; color: var(--color-text-muted); max-width: 680px; margin-bottom: 8px; }
 .footer-meta { font-size: 12px; color: var(--color-text-faint); font-family: var(--font-mono); }
+
+@media (max-width: 640px) {
+  .site-footer { padding: 20px 24px; }
+  .footer-meta { line-height: 1.4; }
+}
 
 /* ===== Animations ===== */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
