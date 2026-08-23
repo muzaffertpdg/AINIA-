@@ -1,15 +1,21 @@
-// ---- Shared scene 1 card ----
-const sharedHasExcerpt = SHARED_SCENE.excerpt && SHARED_SCENE.excerpt.trim().length > 0;
-const sharedCard = document.getElementById('sharedSceneCard');
-sharedCard.className = 'shared-scene-card' + (sharedHasExcerpt ? ' has-excerpt' : '');
-sharedCard.innerHTML = `
-  <a href="${SHARED_SCENE.url}" target="_blank" rel="noopener">
-    <span class="ssc-label">Scene ${SHARED_SCENE.scene} &middot; Shared opening</span>
-    <span class="ssc-title">${SHARED_SCENE.title}</span>
-    ${sharedHasExcerpt ? `<span class="sc-tooltip">${SHARED_SCENE.excerpt}</span>` : ''}
-  </a>
-  <svg class="ssc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-`;
+// ---- Shared scene cards (opening + closing), full-width, same visual treatment ----
+function renderSharedCard(elementId, data, fallbackLabel) {
+  const el = document.getElementById(elementId);
+  if (!el || !data) return;
+  const hasExcerpt = data.excerpt && data.excerpt.trim().length > 0;
+  el.className = 'shared-scene-card' + (hasExcerpt ? ' has-excerpt' : '');
+  el.innerHTML = `
+    <a href="${data.url}" target="_blank" rel="noopener">
+      <span class="ssc-label">${data.label || fallbackLabel}</span>
+      <span class="ssc-title">${data.title}</span>
+      ${hasExcerpt ? `<span class="sc-tooltip">${data.excerpt}</span>` : ''}
+    </a>
+    <svg class="ssc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+  `;
+}
+
+renderSharedCard('sharedSceneCard', SHARED_SCENE, `Scene ${SHARED_SCENE.scene} &middot; Shared opening`);
+renderSharedCard('closingSceneCard', typeof CLOSING_SCENE !== 'undefined' ? CLOSING_SCENE : null, 'Closing scene');
 
 // ---- Scene rows ----
 function cellHTML(entry, kind) {
