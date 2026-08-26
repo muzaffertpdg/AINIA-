@@ -59,10 +59,6 @@ function chapterContentHTML(chapter) {
   }
   if (chapter.scenes && chapter.scenes.length) {
     html += `
-      <div class="legend-key">
-        <span class="lk-item"><span class="lk-dot" style="background:var(--color-algae)"></span>Unibody Infinity</span>
-        <span class="lk-item"><span class="lk-dot" style="background:var(--color-accent)"></span>The Red Handbag</span>
-      </div>
       <div class="column-headers">
         <span class="ch-label"></span>
         <span class="ch-label ch-novel-ui">Unibody Infinity</span>
@@ -104,8 +100,6 @@ const container = document.getElementById('chaptersContainer');
 const initialChapter = resolveInitialChapter();
 
 CHAPTERS.forEach(chapter => {
-  const count = chapter.scenes ? chapter.scenes.length : 0;
-  const isPublished = count > 0 || chapter.sharedScene || chapter.closingScene;
   const isOpen = chapter.number === initialChapter;
 
   const block = document.createElement('div');
@@ -119,7 +113,6 @@ CHAPTERS.forEach(chapter => {
         ${chapter.title ? `<span class="cb-title">${chapter.title}</span>` : ''}
       </span>
       <span class="cb-right">
-        <span class="cb-count${isPublished ? '' : ' cb-count-pending'}">${isPublished ? count + (count === 1 ? ' scene' : ' scenes') : 'coming soon'}</span>
         <svg class="cb-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </span>
     </button>
