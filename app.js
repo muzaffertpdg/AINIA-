@@ -124,23 +124,33 @@ CHAPTERS.forEach(chapter => {
 });
 
 // ---- Accordion open/close: one chapter open at a time ----
+// The panel's inner wrapper stays overflow:hidden WHILE the height is animating
+// (so the open/close slide still looks clipped and clean), then switches to
+// overflow:visible once fully open, so a tooltip on the last card (e.g. the
+// closing scene) can pop out past the panel's bottom edge instead of being cut off.
 document.querySelectorAll('.chapter-bar').forEach(bar => {
   bar.addEventListener('click', () => {
     const block = bar.closest('.chapter-block');
     const chapterNum = block.dataset.chapter;
     const panel = block.querySelector('.chapter-panel');
+    const inner = panel.querySelector('.chapter-panel-inner');
     const wasOpen = bar.classList.contains('is-open');
 
     document.querySelectorAll('.chapter-bar.is-open').forEach(b => {
       b.classList.remove('is-open');
       b.setAttribute('aria-expanded', 'false');
     });
-    document.querySelectorAll('.chapter-panel.is-open').forEach(p => p.classList.remove('is-open'));
+    document.querySelectorAll('.chapter-panel.is-open').forEach(p => {
+      p.classList.remove('is-open');
+      const pi = p.querySelector('.chapter-panel-inner');
+      if (pi) pi.style.overflow = 'hidden'; // re-clip before it starts closing
+    });
 
     if (!wasOpen) {
       bar.classList.add('is-open');
       bar.setAttribute('aria-expanded', 'true');
       panel.classList.add('is-open');
+      inner.style.overflow = 'hidden'; // clipped while it opens
       storeChapter(chapterNum);
       history.replaceState(null, '', `#chapter-${chapterNum}`);
     } else {
@@ -148,6 +158,23 @@ document.querySelectorAll('.chapter-bar').forEach(bar => {
       history.replaceState(null, '', window.location.pathname + window.location.search);
     }
   });
+});
+
+// Once a panel finishes opening, release the clip so tooltips can overflow it.
+document.querySelectorAll('.chapter-panel').forEach(panel => {
+  panel.addEventListener('transitionend', (e) => {
+    if (e.propertyName !== 'grid-template-rows') return;
+    if (panel.classList.contains('is-open')) {
+      const inner = panel.querySelector('.chapter-panel-inner');
+      if (inner) inner.style.overflow = 'visible';
+    }
+  });
+});
+
+// The chapter that's open by default on page load never fires a transition
+// (it's rendered already-open), so release its clip immediately too.
+document.querySelectorAll('.chapter-panel.is-open .chapter-panel-inner').forEach(inner => {
+  inner.style.overflow = 'visible';
 });
 
 // ---- Tooltip behavior ----

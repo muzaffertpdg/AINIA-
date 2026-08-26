@@ -81,8 +81,6 @@
 .cb-title { font-size: 13.5px; color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .cb-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
-.cb-count { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-faint); white-space: nowrap; }
-.cb-count-pending { font-style: italic; }
 .cb-chevron { color: var(--color-text-faint); transition: transform var(--transition), color var(--transition); flex-shrink: 0; }
 .chapter-bar.is-open .cb-chevron { transform: rotate(180deg); color: var(--color-primary); }
 
@@ -92,7 +90,12 @@
   transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .chapter-panel.is-open { grid-template-rows: 1fr; }
-.chapter-panel-inner { overflow: hidden; }
+.chapter-panel-inner {
+  overflow: hidden; /* clips content during the open/close slide animation;
+                        app.js switches this to visible once fully open, so
+                        tooltips on the last card (e.g. the closing scene)
+                        aren't cut off by this boundary */
+}
 .chapter-panel-inner > *:first-child { margin-top: 20px; }
 .chapter-panel-inner .shared-scene-card:last-child { margin-bottom: 0; }
 
@@ -109,7 +112,6 @@
 @media (max-width: 720px) {
   .chapter-bar { padding: 14px 16px; }
   .cb-title { display: none; }
-  .cb-count { font-size: 10px; }
   .chapter-empty { padding: 44px 20px 48px; }
 }
 
