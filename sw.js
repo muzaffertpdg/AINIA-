@@ -3,7 +3,7 @@
 // works offline. Deliberately does NOT touch Substack links or any other
 // external requests — those pass straight through to the network as normal.
 
-const CACHE_NAME = 'ainia-scene-index-v2';
+const CACHE_NAME = 'ainia-scene-index-v3';
 
 const APP_SHELL = [
   './',
