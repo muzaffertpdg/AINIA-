@@ -2,6 +2,10 @@
    Kept separate from styles.css so that file stays byte-identical
    across all OceanShift-family sites. */
 
+/* Small top breathing room now that the site header bar is gone —
+   the hero content used to sit right below it, this restores the gap. */
+.hero { padding-top: 32px; }
+
 .shared-scene-card {
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
   background: var(--color-surface);

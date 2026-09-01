@@ -3,13 +3,14 @@
 // works offline. Deliberately does NOT touch Substack links or any other
 // external requests — those pass straight through to the network as normal.
 
-const CACHE_NAME = 'ainia-scene-index-v3';
+const CACHE_NAME = 'ainia-scene-index-v4';
 
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
   './si-styles.css',
+  './fonts.css',
   './data.js',
   './app.js',
   './manifest.json',
@@ -20,6 +21,28 @@ const APP_SHELL = [
   './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',
+  './fonts/inter-latin-300-normal.woff2',
+  './fonts/inter-latin-400-normal.woff2',
+  './fonts/inter-latin-500-normal.woff2',
+  './fonts/inter-latin-600-normal.woff2',
+  './fonts/inter-latin-700-normal.woff2',
+  './fonts/inter-latin-ext-300-normal.woff2',
+  './fonts/inter-latin-ext-400-normal.woff2',
+  './fonts/inter-latin-ext-500-normal.woff2',
+  './fonts/inter-latin-ext-600-normal.woff2',
+  './fonts/inter-latin-ext-700-normal.woff2',
+  './fonts/jetbrains-mono-latin-400-normal.woff2',
+  './fonts/jetbrains-mono-latin-500-normal.woff2',
+  './fonts/jetbrains-mono-latin-ext-400-normal.woff2',
+  './fonts/jetbrains-mono-latin-ext-500-normal.woff2',
+  './fonts/space-grotesk-latin-400-normal.woff2',
+  './fonts/space-grotesk-latin-500-normal.woff2',
+  './fonts/space-grotesk-latin-600-normal.woff2',
+  './fonts/space-grotesk-latin-700-normal.woff2',
+  './fonts/space-grotesk-latin-ext-400-normal.woff2',
+  './fonts/space-grotesk-latin-ext-500-normal.woff2',
+  './fonts/space-grotesk-latin-ext-600-normal.woff2',
+  './fonts/space-grotesk-latin-ext-700-normal.woff2',
 ];
 
 self.addEventListener('install', (event) => {
