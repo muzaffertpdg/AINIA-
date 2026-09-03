@@ -11,32 +11,69 @@ function storeChapter(num) {
 }
 
 // ---- Shared scene card markup (opening / closing) ----
+// These "ainia"-level cards (the story before/after it bifurcates into the
+// two columns) get the same Standout@/Allusions@ footer as scene cells,
+// styled in a neutral tone since they belong to neither sub-novel alone.
 function sharedCardHTML(data, fallbackLabel) {
   if (!data) return '';
+  cellUid++;
+  const standoutId = `sc-tt-standout-${cellUid}`;
+  const allusionsId = `sc-tt-allusions-${cellUid}`;
   const hasExcerpt = data.excerpt && data.excerpt.trim().length > 0;
+  const allusions = Array.isArray(data.allusions) ? data.allusions.filter(s => s && String(s).trim().length) : [];
+  const allusionsText = allusions.length
+    ? allusions.join(', ')
+    : `<span class="sca-none">none yet</span>`;
+
   return `
-    <div class="shared-scene-card${hasExcerpt ? ' has-excerpt' : ''}">
-      <a href="${data.url}" target="_blank" rel="noopener">
-        <span class="ssc-label">${data.label || fallbackLabel}</span>
-        <span class="ssc-title">${data.title}</span>
-        ${hasExcerpt ? `<span class="sc-tooltip">${data.excerpt}</span>` : ''}
-      </a>
-      <svg class="ssc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+    <div class="shared-scene-card">
+      <div class="ssc-row">
+        <a href="${data.url}" target="_blank" rel="noopener">
+          <span class="ssc-label">${data.label || fallbackLabel}</span>
+          <span class="ssc-title">${data.title}</span>
+        </a>
+        <svg class="ssc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </div>
+      <div class="sc-footer">
+        ${hasExcerpt ? `<button type="button" class="sc-tag sc-tag-standout sc-tag-neutral" data-tooltip-target="${standoutId}" aria-expanded="false" aria-controls="${standoutId}">highlight@</button>` : ''}
+        <button type="button" class="sc-tag sc-tag-allusions sc-tag-neutral" data-tooltip-target="${allusionsId}" aria-expanded="false" aria-controls="${allusionsId}">connected@</button>
+      </div>
+      ${hasExcerpt ? `<div class="sc-tooltip sc-tooltip-standout" id="${standoutId}">${data.excerpt}</div>` : ''}
+      <div class="sc-tooltip sc-tooltip-allusions" id="${allusionsId}">${allusionsText}</div>
     </div>`;
 }
 
 // ---- Individual scene cell markup ----
+// Each cell shows a Standout@ tag (the excerpt / key quote — same content as
+// before, now tag-triggered instead of hover-on-title) and an Allusions@ tag
+// ("confusing map": bare, non-linked, author-curated scene-number references
+// to other scenes this one alludes to — not reciprocal by default; the author
+// decides whether a connection is noted on one side, both, or neither).
+let cellUid = 0;
 function cellHTML(entry, kind) {
   if (!entry) {
     return `<div class="scene-cell empty"><span>not yet published</span></div>`;
   }
+  cellUid++;
+  const standoutId = `sc-tt-standout-${cellUid}`;
+  const allusionsId = `sc-tt-allusions-${cellUid}`;
   const hasExcerpt = entry.excerpt && entry.excerpt.trim().length > 0;
+  const allusions = Array.isArray(entry.allusions) ? entry.allusions.filter(s => s && String(s).trim().length) : [];
+  const allusionsText = allusions.length
+    ? allusions.join(', ')
+    : `<span class="sca-none">none yet</span>`;
+
   return `
-    <div class="scene-cell ${kind}-cell${hasExcerpt ? ' has-excerpt' : ''}">
+    <div class="scene-cell ${kind}-cell">
       <a href="${entry.url}" target="_blank" rel="noopener">
         <span class="sc-title"><span class="cell-dot dot-${kind}"></span>${entry.title}</span>
-        ${hasExcerpt ? `<span class="sc-tooltip">${entry.excerpt}</span>` : ''}
       </a>
+      <div class="sc-footer">
+        ${hasExcerpt ? `<button type="button" class="sc-tag sc-tag-standout" data-tooltip-target="${standoutId}" aria-expanded="false" aria-controls="${standoutId}">highlight@</button>` : ''}
+        <button type="button" class="sc-tag sc-tag-allusions" data-tooltip-target="${allusionsId}" aria-expanded="false" aria-controls="${allusionsId}">connected@</button>
+      </div>
+      ${hasExcerpt ? `<div class="sc-tooltip sc-tooltip-standout" id="${standoutId}">${entry.excerpt}</div>` : ''}
+      <div class="sc-tooltip sc-tooltip-allusions" id="${allusionsId}">${allusionsText}</div>
     </div>`;
 }
 
@@ -177,31 +214,44 @@ document.querySelectorAll('.chapter-panel.is-open .chapter-panel-inner').forEach
   inner.style.overflow = 'visible';
 });
 
-// ---- Tooltip behavior ----
-// Desktop/hover-capable devices: pure CSS :hover reveals the tooltip (see si-styles.css),
-// and a normal click navigates immediately — no JS needed for that path.
-// Touch-primary devices: first tap reveals the tooltip and does NOT navigate; a second
-// tap on that same box navigates normally. Tapping a DIFFERENT scene's tooltip closes
-// whichever one was previously open. Cells with no excerpt never get this treatment —
-// a single tap just navigates.
-const isTouchPrimary = window.matchMedia('(hover: none)').matches;
-if (isTouchPrimary) {
-  let currentlyRevealed = null;
-  document.querySelectorAll('.has-excerpt > a').forEach(link => {
-    link.addEventListener('click', function (e) {
-      const cell = this.closest('.has-excerpt');
-      if (!cell.classList.contains('revealed')) {
-        e.preventDefault();
-        if (currentlyRevealed && currentlyRevealed !== cell) {
-          currentlyRevealed.classList.remove('revealed');
-        }
-        cell.classList.add('revealed');
-        currentlyRevealed = cell;
+// ---- Tooltip behavior: Standout@ / Allusions@ tags ----
+// Used by both scene cells and the opening/closing shared "ainia" cards.
+// Click/tap-driven on all devices (these are buttons, not the card link, so
+// there's no navigate-vs-reveal ambiguity to resolve). Clicking a tag toggles
+// its tooltip; clicking a different tag closes whichever tooltip was open;
+// clicking anywhere outside a tooltip/tag closes the open one.
+(function () {
+  let openTag = null;
+  let openTooltip = null;
+
+  function closeOpen() {
+    if (openTag) openTag.setAttribute('aria-expanded', 'false');
+    if (openTooltip) openTooltip.classList.remove('revealed');
+    openTag = null;
+    openTooltip = null;
+  }
+
+  document.querySelectorAll('.sc-tag').forEach(tag => {
+    tag.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const targetId = this.getAttribute('data-tooltip-target');
+      const tooltip = document.getElementById(targetId);
+      if (!tooltip) return;
+
+      const wasOpen = tooltip.classList.contains('revealed');
+      closeOpen();
+      if (!wasOpen) {
+        tooltip.classList.add('revealed');
+        this.setAttribute('aria-expanded', 'true');
+        openTag = this;
+        openTooltip = tooltip;
       }
-      // already revealed: default navigation proceeds
     });
   });
-}
+
+  document.addEventListener('click', () => closeOpen());
+})();
 
 // ---- PWA: register service worker ----
 if ('serviceWorker' in navigator) {

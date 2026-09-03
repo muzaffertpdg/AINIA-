@@ -7,7 +7,7 @@
 .hero { padding-top: 32px; }
 
 .shared-scene-card {
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  position: relative;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-left: 3px solid var(--color-primary);
@@ -15,11 +15,14 @@
   padding: 20px 26px;
   margin-bottom: 28px;
 }
+.ssc-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .shared-scene-card .ssc-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-primary); margin-bottom: 4px; display: block; }
 .shared-scene-card .ssc-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
 .shared-scene-card a { color: var(--color-text); text-decoration: none; }
 .shared-scene-card a:hover .ssc-title { color: var(--color-primary); }
 .shared-scene-card .ssc-arrow { color: var(--color-text-faint); flex-shrink: 0; }
+.shared-scene-card .sc-footer { margin-top: 14px; }
+.sc-tag-neutral { color: var(--color-primary); }
 
 .column-headers { display: grid; grid-template-columns: 60px 1fr 1fr; gap: 16px; margin-bottom: 4px; padding: 0 4px; }
 .column-headers .ch-label {
@@ -34,6 +37,7 @@
 .scene-num { font-family: var(--font-mono); font-size: 14px; color: var(--color-text-faint); display: flex; align-items: center; }
 
 .scene-cell {
+  position: relative;
   background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md);
   padding: 14px 16px; transition: border-color var(--transition), background var(--transition);
 }
@@ -119,9 +123,7 @@
   .chapter-empty { padding: 44px 20px 48px; }
 }
 
-/* ---- Excerpt tooltips ---- */
-.scene-cell.has-excerpt a, .shared-scene-card.has-excerpt a { position: relative; }
-.shared-scene-card.has-excerpt a { flex: 1; }
+/* ---- Excerpt / Allusions tooltips ---- */
 .sc-tooltip {
   position: absolute;
   left: 0; right: 0; top: calc(100% + 10px);
@@ -141,20 +143,50 @@
   transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
   pointer-events: none;
 }
+.sc-tooltip.revealed {
+  opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto;
+}
+/* Desktop/mouse: hovering a tag reveals its own tooltip directly, no click
+   needed. Touch devices (no fine hover) keep the click/tap behavior handled
+   in app.js — that's also still the mechanism on desktop for anyone who
+   prefers to click, or needs the tooltip to stay open while they read. */
 @media (hover: hover) and (pointer: fine) {
-  .scene-cell.has-excerpt a:hover .sc-tooltip,
-  .shared-scene-card.has-excerpt a:hover .sc-tooltip {
+  .scene-cell:has(.sc-tag-standout:hover) .sc-tooltip-standout,
+  .scene-cell:has(.sc-tag-allusions:hover) .sc-tooltip-allusions,
+  .shared-scene-card:has(.sc-tag-standout:hover) .sc-tooltip-standout,
+  .shared-scene-card:has(.sc-tag-allusions:hover) .sc-tooltip-allusions {
     opacity: 1; visibility: visible; transform: translateY(0);
   }
 }
-.scene-cell.has-excerpt.revealed .sc-tooltip,
-.shared-scene-card.has-excerpt.revealed .sc-tooltip {
-  opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto;
+
+/* ---- Standout@ / Allusions@ tags (scene-cell footer) ---- */
+.sc-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
 }
-/* subtle affordance so users know a tooltip exists before they hover/tap */
-.scene-cell.has-excerpt .sc-title::after,
-.shared-scene-card.has-excerpt .ssc-title::after {
-  content: ' \00B7\00B7\00B7';
-  color: var(--color-text-faint);
+.sc-tag {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: opacity var(--transition);
+  opacity: 0.75;
+}
+.sc-tag:hover, .sc-tag:focus-visible { opacity: 1; }
+.sc-tag:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
+.ui-cell .sc-tag { color: var(--color-algae); }
+.rh-cell .sc-tag { color: var(--color-accent); }
+
+/* Allusions tooltip: same footprint as excerpt tooltip, distinct (non-italic,
+   mono) styling since it holds bare scene references, not a quoted line. */
+.sc-tooltip-allusions {
   font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
+.sc-tooltip-allusions .sca-none { color: var(--color-text-faint); font-style: italic; font-family: var(--font-body); }
