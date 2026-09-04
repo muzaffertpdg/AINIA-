@@ -132,6 +132,12 @@ function resolveInitialChapter() {
   return CHAPTERS[0].number;
 }
 
+// ---- Hero subtitle (main blurb, editable from editor.html) ----
+const heroSubtitleEl = document.getElementById('heroSubtitle');
+if (heroSubtitleEl && typeof MAIN_BLURB === 'string' && MAIN_BLURB.trim()) {
+  heroSubtitleEl.textContent = MAIN_BLURB;
+}
+
 // ---- Build the accordion ----
 const container = document.getElementById('chaptersContainer');
 const initialChapter = resolveInitialChapter();

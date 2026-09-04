@@ -27,13 +27,12 @@
 .column-headers { display: grid; grid-template-columns: 60px 1fr 1fr; gap: 16px; margin-bottom: 4px; padding: 0 4px; }
 .column-headers .ch-label {
   font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
-  color: var(--color-text-faint); padding-bottom: 10px; border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-faint); padding-bottom: 10px;
 }
 .column-headers .ch-novel-ui { color: var(--color-algae); }
 .column-headers .ch-novel-rh { color: var(--color-accent); }
 
-.scene-row { display: grid; grid-template-columns: 60px 1fr 1fr; gap: 16px; align-items: stretch; padding: 10px 0; border-bottom: 1px solid var(--color-divider); }
-.scene-row:last-child { border-bottom: none; }
+.scene-row { display: grid; grid-template-columns: 60px 1fr 1fr; gap: 16px; align-items: stretch; padding: 10px 0; }
 .scene-num { font-family: var(--font-mono); font-size: 14px; color: var(--color-text-faint); display: flex; align-items: center; }
 
 .scene-cell {
