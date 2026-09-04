@@ -155,6 +155,82 @@ p, li { text-wrap: pretty; max-width: 72ch; }
 :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: var(--radius-sm); }
 button { cursor: pointer; background: none; border: none; }
 
+/* ===== Ambient corner glow ===== */
+/* #index-section gets its own elevated stacking context so every scene
+   card, tooltip, and link inside it paints above the blobs — regardless of
+   where the blobs move — while .hero is deliberately left with no z-index
+   of its own, so it stays in the default paint layer, below the blobs. */
+#index-section {
+  position: relative;
+  z-index: 2;
+}
+
+.ambient-glow {
+  position: fixed;
+  top: 50%; left: 50%;
+  pointer-events: none;
+  z-index: 1; /* above .hero (unpositioned/default layer), below #index-section (2) */
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--color-algae) 38%, transparent) 0%,
+    color-mix(in srgb, var(--color-algae) 14%, transparent) 45%,
+    transparent 72%
+  );
+  filter: blur(70px);
+  will-change: transform, border-radius;
+}
+
+/* Three independently-moving blobs, all originating from the page's visual
+   center (not a viewport-corner percentage, which shrinks unpredictably on
+   small screens and can push the whole blob off a mobile viewport). Each
+   keyframe bakes in the -50%/-50% self-centering offset alongside its own
+   wander distance, so the blob stays centered on its anchor point while
+   roaming. translate3d (not translate) nudges Safari/iOS into GPU-compositing
+   the layer, which avoids a known bug where blurred, transformed fixed
+   elements sometimes silently fail to repaint on iOS. */
+.ambient-glow--1 {
+  width: 45vmax; height: 45vmax;
+  max-width: 620px; max-height: 620px;
+  animation: ambient-drift-1 2.2s ease-in-out infinite;
+}
+.ambient-glow--2 {
+  width: 38vmax; height: 38vmax;
+  max-width: 460px; max-height: 460px;
+  animation: ambient-drift-2 2.5s ease-in-out infinite;
+  animation-delay: -0.8s;
+}
+.ambient-glow--3 {
+  width: 30vmax; height: 30vmax;
+  max-width: 360px; max-height: 360px;
+  animation: ambient-drift-3 2.35s ease-in-out infinite;
+  animation-delay: -1.1s;
+}
+
+@keyframes ambient-drift-1 {
+  0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  25%  { transform: translate3d(calc(-50% + 30vw), calc(-50% + 20vh), 0) scale(1.15); border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; }
+  50%  { transform: translate3d(calc(-50% - 25vw), calc(-50% + 28vh), 0) scale(0.9); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+  75%  { transform: translate3d(calc(-50% - 30vw), calc(-50% - 15vh), 0) scale(1.08); border-radius: 30% 70% 40% 60% / 60% 40% 60% 40%; }
+  100% { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+}
+@keyframes ambient-drift-2 {
+  0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+  25%  { transform: translate3d(calc(-50% - 28vw), calc(-50% + 22vh), 0) scale(0.92); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+  50%  { transform: translate3d(calc(-50% - 15vw), calc(-50% - 25vh), 0) scale(1.12); border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; }
+  75%  { transform: translate3d(calc(-50% + 15vw), calc(-50% - 10vh), 0) scale(0.96); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  100% { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+}
+@keyframes ambient-drift-3 {
+  0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+  25%  { transform: translate3d(calc(-50% + 25vw), calc(-50% - 20vh), 0) scale(1.1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50%  { transform: translate3d(calc(-50% + 30vw), calc(-50% + 10vh), 0) scale(0.9); border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+  75%  { transform: translate3d(calc(-50% + 10vw), calc(-50% + 25vh), 0) scale(1.06); border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; }
+  100% { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient-glow--1, .ambient-glow--2, .ambient-glow--3 { animation: none; }
+}
+
 /* ===== Header ===== */
 .site-header {
   position: sticky; top: 0; z-index: 1000;
@@ -182,11 +258,6 @@ button { cursor: pointer; background: none; border: none; }
     var(--color-bg)
   );
   position: relative; overflow: hidden;
-}
-.hero::before {
-  content: ''; position: absolute; top: -200px; right: -200px; width: 600px; height: 600px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--color-algae) 8%, transparent), transparent 70%);
-  pointer-events: none;
 }
 .hero-inner { max-width: var(--content-wide); margin: 0 auto; position: relative; }
 .hero-badge {
@@ -381,6 +452,19 @@ section { padding: 32px 0; }
 .analysis-card:nth-child(3) { animation-delay: 160ms; }
 .analysis-card:nth-child(4) { animation-delay: 240ms; }
 
+/* Force blob animation even if OS has reduced motion enabled */
+.ambient-glow--1 {
+  animation: ambient-drift-1 28s ease-in-out infinite !important;
+}
+.ambient-glow--2 {
+  animation: ambient-drift-2 29s ease-in-out infinite !important;
+  animation-delay: -9s !important;
+}
+.ambient-glow--3 {
+  animation: ambient-drift-3 285s ease-in-out infinite !important;
+  animation-delay: 12s !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  /* Intentionally do NOT disable blob animations */
 }
