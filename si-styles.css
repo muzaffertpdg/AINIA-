@@ -121,6 +121,8 @@
   .chapter-bar { padding: 14px 16px; }
   .cb-left { gap: 8px; }
   .chapter-empty { padding: 44px 20px 48px; }
+  .shared-scene-card { padding-bottom: 12px; }
+
 }
 
 /* ---- Excerpt / Allusions tooltips ---- */
