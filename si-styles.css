@@ -118,7 +118,7 @@
 
 @media (max-width: 720px) {
   .chapter-bar { padding: 14px 16px; }
-  .cb-title { display: none; }
+  .cb-left { gap: 8px; }
   .chapter-empty { padding: 44px 20px 48px; }
 }
 

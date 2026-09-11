@@ -1,10 +1,3 @@
-/* ============================================
-   Radshift — Design System
-   Built on OceanShift's design tokens.
-   Green intensifies (light -> dark) as
-   escalation gets worse, same logic OceanShift
-   uses for ocean-color trend strength.
-   ============================================ */
 
 :root,
 [data-theme='light'] {
@@ -180,14 +173,7 @@ button { cursor: pointer; background: none; border: none; }
   will-change: transform, border-radius;
 }
 
-/* Three independently-moving blobs, all originating from the page's visual
-   center (not a viewport-corner percentage, which shrinks unpredictably on
-   small screens and can push the whole blob off a mobile viewport). Each
-   keyframe bakes in the -50%/-50% self-centering offset alongside its own
-   wander distance, so the blob stays centered on its anchor point while
-   roaming. translate3d (not translate) nudges Safari/iOS into GPU-compositing
-   the layer, which avoids a known bug where blurred, transformed fixed
-   elements sometimes silently fail to repaint on iOS. */
+
 .ambient-glow--1 {
   width: 45vmax; height: 45vmax;
   max-width: 620px; max-height: 620px;
@@ -200,7 +186,7 @@ button { cursor: pointer; background: none; border: none; }
   animation-delay: -0.8s;
 }
 .ambient-glow--3 {
-  width: 30vmax; height: 30vmax;
+  width: 35vmax; height: 35vmax;
   max-width: 360px; max-height: 360px;
   animation: ambient-drift-3 2.35s ease-in-out infinite;
   animation-delay: -1.1s;
@@ -229,6 +215,68 @@ button { cursor: pointer; background: none; border: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ambient-glow--1, .ambient-glow--2, .ambient-glow--3 { animation: none; }
+}
+
+/* Mobile (portrait or narrow): same drift pattern, roughly half the wander
+   distance, so the blobs don't overshoot a small viewport as dramatically. */
+@media (max-width: 720px) {
+  .ambient-glow--1 { max-width: 340px; max-height: 340px; }
+  .ambient-glow--2 { max-width: 260px; max-height: 260px; }
+  .ambient-glow--3 { max-width: 200px; max-height: 200px; }
+
+  @keyframes ambient-drift-1 {
+    0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    25%  { transform: translate3d(calc(-50% + 16vw), calc(-50% + 30vh), 0) scale(1.15); border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; }
+    50%  { transform: translate3d(calc(-50% - 14vw), calc(-50% + 40vh), 0) scale(0.9); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+    75%  { transform: translate3d(calc(-50% - 16vw), calc(-50% - 32vh), 0) scale(1.08); border-radius: 30% 70% 40% 60% / 60% 40% 60% 40%; }
+    100% { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  }
+  @keyframes ambient-drift-2 {
+    0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+    25%  { transform: translate3d(calc(-50% - 15vw), calc(-50% + 48vh), 0) scale(0.92); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+    50%  { transform: translate3d(calc(-50% - 8vw), calc(-50% - 52vh), 0) scale(1.12); border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; }
+    75%  { transform: translate3d(calc(-50% + 8vw), calc(-50% - 20vh), 0) scale(0.96); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    100% { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+  }
+  @keyframes ambient-drift-3 {
+    0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+    25%  { transform: translate3d(calc(-50% + 14vw), calc(-50% - 44vh), 0) scale(1.1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    50%  { transform: translate3d(calc(-50% + 16vw), calc(-50% + 20vh), 0) scale(0.9); border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+    75%  { transform: translate3d(calc(-50% + 5vw), calc(-50% + 52vh), 0) scale(1.06); border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; }
+    100% { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+  }
+}
+
+/* Landscape mobile specifically: height is the tight constraint here, not
+   width, so vertical wander gets tightened further than horizontal — keeps
+   the blobs lively side-to-side without clipping against the short viewport
+   top/bottom. */
+@media (max-height: 480px) and (orientation: landscape) {
+  .ambient-glow--1 { max-width: 260px; max-height: 260px; }
+  .ambient-glow--2 { max-width: 200px; max-height: 200px; }
+  .ambient-glow--3 { max-width: 160px; max-height: 160px; }
+
+  @keyframes ambient-drift-1 {
+    0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    25%  { transform: translate3d(calc(-50% + 18vw), calc(-50% + 7vh), 0) scale(1.15); border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; }
+    50%  { transform: translate3d(calc(-50% - 16vw), calc(-50% + 9vh), 0) scale(0.9); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+    75%  { transform: translate3d(calc(-50% - 18vw), calc(-50% - 5vh), 0) scale(1.08); border-radius: 30% 70% 40% 60% / 60% 40% 60% 40%; }
+    100% { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  }
+  @keyframes ambient-drift-2 {
+    0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+    25%  { transform: translate3d(calc(-50% - 17vw), calc(-50% + 8vh), 0) scale(0.92); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+    50%  { transform: translate3d(calc(-50% - 9vw), calc(-50% - 8vh), 0) scale(1.12); border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; }
+    75%  { transform: translate3d(calc(-50% + 9vw), calc(-50% - 3vh), 0) scale(0.96); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    100% { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+  }
+  @keyframes ambient-drift-3 {
+    0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+    25%  { transform: translate3d(calc(-50% + 16vw), calc(-50% - 7vh), 0) scale(1.1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    50%  { transform: translate3d(calc(-50% + 18vw), calc(-50% + 3vh), 0) scale(0.9); border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+    75%  { transform: translate3d(calc(-50% + 6vw), calc(-50% + 8vh), 0) scale(1.06); border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; }
+    100% { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; }
+  }
 }
 
 /* ===== Header ===== */
