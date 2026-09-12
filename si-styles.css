@@ -1,9 +1,4 @@
-/* Scene Index — supplementary styles.
-   Kept separate from styles.css so that file stays byte-identical
-   across all OceanShift-family sites. */
 
-/* Small top breathing room now that the site header bar is gone —
-   the hero content used to sit right below it, this restores the gap. */
 .hero { padding-top: 32px; }
 
 .shared-scene-card {
@@ -52,11 +47,37 @@
 .scene-cell.empty { background: transparent; border-style: dashed; display: flex; align-items: center; justify-content: center; }
 .scene-cell.empty span { font-family: var(--font-mono); font-size: 11.5px; color: var(--color-text-faint); }
 
+/* Mobile: the row-number badge moves out of normal flow and floats over the
+   UI card's top-right corner instead of taking its own l3ne. .scene-row
+   becomes the positioning anchor (position: relative) so .scene-num can be
+   pinned to it with position: absolute — this needs no HTML/JS changes,
+   since .scene-num is already the first child of .scene-row; taking it out
+   of flow just leaves the UI card as the first flowing element, so its top
+   edge lines up with the row's top edge and the badge lands on its corner.
+   z-index is required because .scene-cell also has position:relative — two
+   positioned siblings at the same (default) stacking level paint in DOM
+   order, and the UI card comes after .scene-num, so without z-index the
+   card's opaque background would paint over the badge and hide it. */
 @media (max-width: 720px) {
   .column-headers { display: none; }
-  .scene-row { display: flex; flex-direction: column; gap: 0; }
-  .scene-num { padding-top: 0px; margin-bottom: 0px; }
-  .scene-cell.ui-cell { margin-bottom: 8px; }
+  .scene-row {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px 3;
+  }
+  .scene-num {
+    position: absolute;
+    top: 16px;
+    right: 10px;
+    z-index: 2;
+    display: block;
+    font-size: 11px;
+    line-height: 1.4;
+    pointer-events: none; /* never blocks taps on the card underneath */
+  }
+  .scene-cell.ui-cell { margin-bottom: 0; }
 }
 
 .legend-key { display: flex; gap: 22px; margin: 20px 0 24px; font-size: 12.5px; color: var(--color-text-muted); }
