@@ -148,7 +148,7 @@ p, li { text-wrap: pretty; max-width: 72ch; }
 :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: var(--radius-sm); }
 button { cursor: pointer; background: none; border: none; }
 
-/* ===== Ambient corner glow ===== */
+/* ===== Ambient glow ===== */
 /* #index-section gets its own elevated stacking context so every scene
    card, tooltip, and link inside it paints above the blobs — regardless of
    where the blobs move — while .hero is deliberately left with no z-index
@@ -166,8 +166,8 @@ button { cursor: pointer; background: none; border: none; }
   background: radial-gradient(
     circle at 50% 50%,
     color-mix(in srgb, var(--color-algae) 38%, transparent) 0%,
-    color-mix(in srgb, var(--color-algae) 14%, transparent) 45%,
-    transparent 72%
+    color-mix(in srgb, var(--color-algae) 24%, transparent) 75%,
+    transparent 60%
   );
   filter: blur(70px);
   will-change: transform, border-radius;
@@ -176,20 +176,20 @@ button { cursor: pointer; background: none; border: none; }
 
 .ambient-glow--1 {
   width: 45vmax; height: 45vmax;
-  max-width: 620px; max-height: 620px;
+  max-width: 720px; max-height: 720px;
   animation: ambient-drift-1 2.2s ease-in-out infinite;
 }
 .ambient-glow--2 {
   width: 38vmax; height: 38vmax;
-  max-width: 460px; max-height: 460px;
+  max-width: 560px; max-height: 560px;
   animation: ambient-drift-2 2.5s ease-in-out infinite;
-  animation-delay: -0.8s;
+  animation-delay: -0.1s;
 }
 .ambient-glow--3 {
   width: 35vmax; height: 35vmax;
-  max-width: 360px; max-height: 360px;
+  max-width: 460px; max-height: 460px;
   animation: ambient-drift-3 2.35s ease-in-out infinite;
-  animation-delay: -1.1s;
+  animation-delay: -0.3s;
 }
 
 @keyframes ambient-drift-1 {
@@ -220,9 +220,9 @@ button { cursor: pointer; background: none; border: none; }
 /* Mobile (portrait or narrow): same drift pattern, roughly half the wander
    distance, so the blobs don't overshoot a small viewport as dramatically. */
 @media (max-width: 720px) {
-  .ambient-glow--1 { max-width: 340px; max-height: 340px; }
-  .ambient-glow--2 { max-width: 260px; max-height: 260px; }
-  .ambient-glow--3 { max-width: 200px; max-height: 200px; }
+  .ambient-glow--1 { max-width: 440px; max-height: 340px; }
+  .ambient-glow--2 { max-width: 360px; max-height: 260px; }
+  .ambient-glow--3 { max-width: 300px; max-height: 200px; }
 
   @keyframes ambient-drift-1 {
     0%   { transform: translate3d(-50%, -50%, 0) scale(1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
@@ -509,8 +509,8 @@ section { padding: 32px 0; }
   animation-delay: -9s !important;
 }
 .ambient-glow--3 {
-  animation: ambient-drift-3 285s ease-in-out infinite !important;
-  animation-delay: 12s !important;
+  animation: ambient-drift-3 50s ease-in-out infinite !important;
+  animation-delay: 6s !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
