@@ -165,8 +165,8 @@ button { cursor: pointer; background: none; border: none; }
   z-index: 1; /* above .hero (unpositioned/default layer), below #index-section (2) */
   background: radial-gradient(
     circle at 50% 50%,
-    color-mix(in srgb, var(--color-algae) 38%, transparent) 0%,
-    color-mix(in srgb, var(--color-algae) 24%, transparent) 75%,
+    color-mix(in srgb, var(--color-algae) 58%, transparent) 0%,
+    color-mix(in srgb, var(--color-algae) 24%, transparent) 60%,
     transparent 60%
   );
   filter: blur(70px);

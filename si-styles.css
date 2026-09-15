@@ -1,5 +1,5 @@
 
-.hero { padding-top: 32px; }
+.hero { padding-top: 16px; }
 
 .shared-scene-card {
   position: relative;
@@ -9,11 +9,7 @@
   border-radius: var(--radius-lg);
   padding: 20px 26px;
   margin-bottom: 28px;
-  box-shadow: 
-    inset 0 0 0 1px var(--color-border), 
-    inset 3px 0 0 0 var(--color-primary) !important;
-
-  z-index: 1;  
+    
 }
 .ssc-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .shared-scene-card .ssc-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-primary); margin-bottom: 4px; display: block; }
