@@ -105,7 +105,7 @@ function chapterContentHTML(chapter) {
     chapter.scenes.forEach(row => {
       html += `
         <div class="scene-row">
-          <div class="scene-num">${row.scene}</div>
+          <div class="scene-num">scene ${row.scene}</div>
           ${cellHTML(row.ui, 'ui')}
           ${cellHTML(row.rh, 'rh')}
         </div>`;

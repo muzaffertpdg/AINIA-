@@ -29,7 +29,7 @@
 .column-headers .ch-novel-rh { color: var(--color-accent); }
 
 .scene-row { display: grid; grid-template-columns: 60px 1fr 1fr; gap: 16px; align-items: stretch; padding: 10px 0; }
-.scene-num { font-family: var(--font-mono); font-size: 14px; color: var(--color-text-faint); display: flex; align-items: center; }
+.scene-num { font-family: var(--font-mono); font-size: 14px; color: var(--color-text-muted); display: flex; align-items: center; }
 
 .scene-cell {
   position: relative;
